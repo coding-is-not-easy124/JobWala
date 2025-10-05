@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
 
 const Dashboard = () => {
