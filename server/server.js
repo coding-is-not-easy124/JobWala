@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 import { clerkWebHooks } from "./controllers/webhooks.js";
 import companyRoutes from './routes/companyRoutes.js';
 import connectCloudinary from "./config/cloudinary.js";
+import jobRoutes from './routes/jobRoutes.js';
 
 // Initialize Express
 const app = express();
@@ -27,6 +28,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 
 app.post('/webhooks', clerkWebHooks);
 app.use('/api/company', companyRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Port
 const PORT = process.env.PORT || 5000;
