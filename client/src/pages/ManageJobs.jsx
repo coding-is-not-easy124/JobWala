@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { manageJobsData } from '../assets/assets'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 const ManageJobs = () => {
 
   const navigate = useNavigate();
+
+  const [jobs, setJobs] = useState(false);
+
+  const { backendUrl, companyToken } = useContext(AppContext);
+
+  // Function to fetch Company Job Applications Data
+  const fetchCompanyJobs = async () => {
+    try {
+
+      const { data } = await axios.get(backendUrl+'/api/company/list-jobs');
+      
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <div className='container p-4 max-w-5xl'>
