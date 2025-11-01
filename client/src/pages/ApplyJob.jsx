@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext';
-import { assets, jobsData } from '../assets/assets';
+import { assets } from '../assets/assets';
 import Loading from '../components/Loading';
 import Navbar from '../components/Navbar';
 import kconvert from 'k-convert';
@@ -22,7 +22,9 @@ const ApplyJob = () => {
 
   const [jobData, setJobData] = useState(null);
 
-  const { jobs, backendUrl, userData, userApplications } = useContext(AppContext);
+  const [ isAlreadyApplied, setIsAlreadyApplied ] = useState(false);
+
+  const { jobs, backendUrl, userData, userApplications, fetchUserApplications } = useContext(AppContext);
 
   const fetchJob = async () => {
 
@@ -61,6 +63,7 @@ const ApplyJob = () => {
 
       if(data.success){
         toast.success(data.message);
+        fetchUserApplications();
       } else {
         toast.error(data.message);
       }
@@ -70,9 +73,20 @@ const ApplyJob = () => {
     }
   }
 
+  const checkAlreadyApplied = () => {
+    const hasApplied = userApplications.some(item => item.jobId._id === jobData._id);
+    setIsAlreadyApplied(hasApplied);
+  }
+
   useEffect(() => {
     fetchJob();
   }, [id])
+
+  useEffect(() => {
+    if (userApplications.length > 0 && jobData) {
+      checkAlreadyApplied()
+    }
+  }, [jobData, userApplications, id])
 
   return jobData ? (
     <>
@@ -106,7 +120,7 @@ const ApplyJob = () => {
             </div>
 
             <div className='flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center'>
-              <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded'>Apply Now</button>
+              <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded'>{isAlreadyApplied ? 'Already Applied' : 'Apply Now'}</button>
               <p className='mt-1 text-gray-600'>Posted {moment(jobData.date).fromNow()}</p>
             </div>
           </div>
@@ -115,7 +129,7 @@ const ApplyJob = () => {
             <div className='w-full lg:w-2/3'>
               <h2 className='font-bold text-2xl mb-4'>Job Description</h2>
               <div className='text-[15px] text-[#7A7B7D]' dangerouslySetInnerHTML={{__html: jobData.description}}></div>
-              <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded mt-10'>Apply Now</button>
+              <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded mt-10'>{isAlreadyApplied ? 'Already Applied' : 'Apply Now'}</button>
             </div>
             <div>
               {/* Right Section More Jobs */}
